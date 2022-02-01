@@ -1,0 +1,3 @@
+The following pins are being used as listed.
+
+35: Analog read for the photo diode.
