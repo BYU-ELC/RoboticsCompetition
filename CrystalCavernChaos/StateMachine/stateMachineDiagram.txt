@@ -12,17 +12,17 @@ transition trigger --> next state
 
 
 ------------#WAIT FOR ROBOT -----------------
-Paddle A-H  --> #SERVO PUSHED
-3 Penalties --> #LOST
-Button      --> #RESET
-PDTriggered --> #RESET
+*** initialize flag finished to FALSE ***
+while !finished
+checkPhotoDiode()
+checkPenalty()
+checkpaddles(&paddleList, &servoList)
+	(Enable servo)
+	(Command position)
+	(Increment Penalty)
 
-
-------------#SERVO PUSHED -----------------
-(Enable servo)
-(Command position)
-(Increment Penalty)
-
+*** ends while loop when flag finished is TRUE ***
+bool <-- reset(photoDiode) or lost(penalties)
 
 ------------#RESET -----------------
 (Close Servos)
@@ -39,4 +39,5 @@ Button --> #PREP
 ------------#PREP -----------------
 (Clear timer)
 (Clear LCD)
---> #BEGIN
+(LCD display "Start when ready")
+Button --> #BEGIN

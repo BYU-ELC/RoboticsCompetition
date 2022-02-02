@@ -14,5 +14,9 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  static int numPenalties{0};
+  //begin();
+  //waitForRobot(); --> return decision for reset or lost
+  //reset() / lost();
+  //prep();
 }
