@@ -8,5 +8,4 @@ G26: Servo output
 G27: Servo output
 G32: Servo output
 G33: Servo output
-G34: IR LED output
 G35: Analog read for the photo diode.
