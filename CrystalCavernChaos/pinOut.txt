@@ -1,3 +1,4 @@
 The following pins are being used as listed.
 
+13: ir LED pin.
 35: Analog read for the photo diode.
