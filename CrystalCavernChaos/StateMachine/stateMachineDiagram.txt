@@ -1,0 +1,42 @@
+KEY:
+(*) moore outputs
+transition trigger --> next state
+
+
+------------#BEGIN -----------------
+(IR_LED Activate)
+(PD Activate)
+(Timer Star)
+(Enable Paddle Triggers)
+--> #WAIT FOR ROBOT
+
+
+------------#WAIT FOR ROBOT -----------------
+Paddle A-H  --> #SERVO PUSHED
+3 Penalties --> #LOST
+Button      --> #RESET
+PDTriggered --> #RESET
+
+
+------------#SERVO PUSHED -----------------
+(Enable servo)
+(Command position)
+(Increment Penalty)
+
+
+------------#RESET -----------------
+(Close Servos)
+(IR-LED off)
+(Stop timer)
+button --> #PREP
+
+
+------------#LOST -----------------
+(Display Penalties)
+Button --> #PREP 
+
+
+------------#PREP -----------------
+(Clear timer)
+(Clear LCD)
+--> #BEGIN
