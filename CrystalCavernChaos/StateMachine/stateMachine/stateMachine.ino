@@ -6,29 +6,38 @@ const int irLed{13};
 const int photoDiodeLed{5};
 const int startStop{0};
 
-bool doReset{false};
-
 void setup() {
   Serial.begin(9600);
   Serial.println("In setup: Connecting Servos");
 }
 
-void checkPhotoDiode() {
+bool checkPhotoDiode() {
   // Debugging Code:
-  
+  Serial.print("  --");
+  Serial.println("checkPhotoDiode()");
+  // state machine code:
+  return false;
+}
+
+bool checkPenalties(int& numPenalties) {
+  // Debugging Code:
+  Serial.print("  --");
+  Serial.println("checkPenalties()");
   // state machine code:
   
 }
 
-void checkPenalties() {
+void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const int (&servolist)[numServos]) {
   // Debugging Code:
-
-  // state machine code:
-}
-
-void checkPaddles(int (&paddleList)[numServos], int (&servolist)[numServos]) {
+  Serial.print("  --");
+  Serial.println("checkPaddles()");
+  
+  // state machine code
   for (int i = 0; i < numServos; i++) {
-    
+    if (digitalRead(paddleList[i]) == HIGH) {
+      digitalWrite(servoList[i], HIGH);
+      numPenalties++;
+    }
   }
 }
 
@@ -46,18 +55,19 @@ bool waitForRobot() {
   
   // state machine code
 
-  bool triggeredDiode{false}
-  bool threePenalties{false};
-  checkPaddles(paddleList, servolist);
+  bool triggeredDiode{false};
+  int numPenalties{0};
+  bool maxPenalties{false};
   
   while (true) {
 
     triggeredDiode = checkPhotoDiode();
-    threePenalties = checkPenalty();
+    checkPaddles(numPenalties, paddleList, servoList);
+    maxPenalties = checkPenalties(numPenalties);
     
     if (triggeredDiode)
       return true; // signifies that we should do the reset, so that's why we store waitForRobot() return value in variable doReset in main loop
-    else if (threePenalties)
+    else if (maxPenalties)
       return false;
   }
 }
@@ -65,6 +75,14 @@ bool waitForRobot() {
 void reset() {
   // Debugging Code:
   Serial.println("waitForRobot");
+
+  // state machine code
+  
+}
+
+void lost() {
+  // Debugging Code:
+  Serial.println("lost");
 
   // state machine code
   
@@ -80,12 +98,18 @@ void prep() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  static int numPenalties{0};
+  // static int numPenalties{0}; <-- not sure why this line was necesary to begin with... ask Michael what the thought process was behind the static variable
   beginGame();
-  doReset = waitForRobot();
-  if (doReset)
+  delay(500);
+  bool doReset{waitForRobot()};
+  delay(500);
+  if (doReset) {
     reset();
-  else
+    delay(500);
+  } else {
     lost();
+    delay(500);
+  }
   prep();
+  delay(500);
 }
