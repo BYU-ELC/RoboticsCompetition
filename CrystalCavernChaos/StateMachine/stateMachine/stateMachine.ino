@@ -1,6 +1,7 @@
 const int numServos{7};
 const int servoList[numServos]{12, 14, 25, 26, 27, 32, 33};
 const int paddleList[numServos]{2, 4, 5, 15, 16, 17, 18};
+const bool beenPressed[numServos]{false, false, false, false, false, false, false};
 
 const int irLed{13};
 const int photoDiodeLed{5};
@@ -9,6 +10,13 @@ const int startStop{0};
 void setup() {
   Serial.begin(9600);
   Serial.println("In setup: Connecting Servos");
+
+  for (int i = 0; i < numServos; ++i) {
+    pinMode(paddleList[i], INPUT);
+    Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
+  }
+
+  Serial.println("-----------------Setup Complete-------------------");
 }
 
 bool checkPhotoDiode() {
@@ -24,7 +32,11 @@ bool checkPenalties(int& numPenalties) {
   Serial.print("  --");
   Serial.println("checkPenalties()");
   // state machine code:
-  
+  if (numPenalties > 2) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const int (&servolist)[numServos]) {
@@ -34,8 +46,11 @@ void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const i
   
   // state machine code
   for (int i = 0; i < numServos; i++) {
-    if (digitalRead(paddleList[i]) == HIGH) {
+    if (digitalRead(paddleList[i]) == HIGH && beenPressed[i] == false) {
       digitalWrite(servoList[i], HIGH);
+      Serial.print("\tButton ");
+      Serial.print(i);
+      Serial.println(" pressed");
       numPenalties++;
     }
   }
@@ -55,6 +70,9 @@ bool waitForRobot() {
   
   // state machine code
 
+  
+  
+  
   bool triggeredDiode{false};
   int numPenalties{0};
   bool maxPenalties{false};
@@ -72,11 +90,12 @@ bool waitForRobot() {
   }
 }
 
-void reset() {
+void won() {
   // Debugging Code:
   Serial.println("waitForRobot");
 
   // state machine code
+  
   
 }
 
@@ -104,10 +123,11 @@ void loop() {
   bool doReset{waitForRobot()};
   delay(500);
   if (doReset) {
-    reset();
+    won();
     delay(500);
   } else {
     lost();
+    Serial.println("---------------------");
     delay(500);
   }
   prep();

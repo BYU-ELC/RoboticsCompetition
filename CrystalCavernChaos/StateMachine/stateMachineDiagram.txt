@@ -24,7 +24,7 @@ checkpaddles(&paddleList, &servoList)
 *** ends while loop when flag finished is TRUE ***
 bool <-- reset(photoDiode) or lost(penalties)
 
-------------#RESET -----------------
+------------#WON -----------------
 (Close Servos)
 (IR-LED off)
 (Stop timer)
