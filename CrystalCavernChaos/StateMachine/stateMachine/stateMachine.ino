@@ -1,11 +1,11 @@
 const int numServos{7};
 const int servoList[numServos]{12, 14, 25, 26, 27, 32, 33};
 const int paddleList[numServos]{2, 4, 5, 15, 16, 17, 18};
-const bool beenPressed[numServos]{false, false, false, false, false, false, false};
+bool beenPressed[numServos]{false, false, false, false, false, false, false};
 
 const int irLed{13};
 const int photoDiodeLed{5};
-const int startStop{0};
+const int startStop{21};
 
 void setup() {
   Serial.begin(9600);
@@ -13,7 +13,7 @@ void setup() {
 
   for (int i = 0; i < numServos; ++i) {
     pinMode(paddleList[i], INPUT);
-    Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
+    //Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
   }
 
   pinMode(startStop, INPUT);
@@ -23,16 +23,16 @@ void setup() {
 
 bool checkPhotoDiode() {
   // Debugging Code:
-  Serial.print("  --");
-  Serial.println("checkPhotoDiode()");
+  //Serial.print("  --");
+  //Serial.println("checkPhotoDiode()");
   // state machine code:
   return false;
 }
 
 bool checkPenalties(int& numPenalties) {
   // Debugging Code:
-  Serial.print("  --");
-  Serial.println("checkPenalties()");
+  //Serial.print("  --");
+  //Serial.println("checkPenalties()");
   // state machine code:
   if (numPenalties > 2) {
     return true;
@@ -43,8 +43,8 @@ bool checkPenalties(int& numPenalties) {
 
 void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const int (&servolist)[numServos]) {
   // Debugging Code:
-  Serial.print("  --");
-  Serial.println("checkPaddles()");
+  //Serial.print("  --");
+  //Serial.println("checkPaddles()");
   
   // state machine code
   for (int i = 0; i < numServos; i++) {
@@ -53,17 +53,19 @@ void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const i
       Serial.print("\tButton ");
       Serial.print(i);
       Serial.println(" pressed");
+      beenPressed[i] = true;
       numPenalties++;
     }
   }
 }
 
+bool checkStart() {
+  return digitalRead(startStop);
+}
+
 void beginGame() {
   // Debugging Code:
   Serial.println("beginGame");
-  
-  // state machine code
-  
 }
 
 bool waitForRobot() {
@@ -71,16 +73,17 @@ bool waitForRobot() {
   Serial.println("waitForRobot");
   
   // state machine code
-
-  if 
-  
-  
   bool triggeredDiode{false};
   int numPenalties{0};
   bool maxPenalties{false};
   
   while (true) {
 
+
+    if (checkStart() != 0) {
+      return false;
+    }
+  
     triggeredDiode = checkPhotoDiode();
     checkPaddles(numPenalties, paddleList, servoList);
     maxPenalties = checkPenalties(numPenalties);
@@ -94,11 +97,11 @@ bool waitForRobot() {
 
 void won() {
   // Debugging Code:
-  Serial.println("waitForRobot");
+  Serial.println("won");
 
   // state machine code
-  
-  
+  while (!checkStart()) {delay(100);}
+  delay(500);// this will make sure a second button press by the user isn't accidentally recognised twice, restarting the game.
 }
 
 void lost() {
@@ -106,6 +109,8 @@ void lost() {
   Serial.println("lost");
 
   // state machine code
+  while (!checkStart()) {delay(100);}
+  delay(500);// this will make sure a second button press by the user isn't accidentally recognised twice, restarting the game.
   
 }
 
@@ -114,24 +119,29 @@ void prep() {
   Serial.println("prep");
   
   // state machine code
-  
+  while (!checkStart()) {delay(100);}
+  delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
+
+  for (int i = 0; i < numServos; ++i) {
+    beenPressed[i] = false;
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   // static int numPenalties{0}; <-- not sure why this line was necesary to begin with... ask Michael what the thought process was behind the static variable
   beginGame();
-  delay(500);
+  //delay(500);
   bool doReset{waitForRobot()};
-  delay(500);
+  //delay(500);
   if (doReset) {
     won();
-    delay(500);
+    //delay(500);
   } else {
     lost();
     Serial.println("---------------------");
-    delay(500);
+    //delay(500);
   }
   prep();
-  delay(500);
+  //delay(500);
 }
