@@ -16,6 +16,8 @@ void setup() {
     Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
   }
 
+  pinMode(startStop, INPUT);
+
   Serial.println("-----------------Setup Complete-------------------");
 }
 
@@ -70,7 +72,7 @@ bool waitForRobot() {
   
   // state machine code
 
-  
+  if (
   
   
   bool triggeredDiode{false};
