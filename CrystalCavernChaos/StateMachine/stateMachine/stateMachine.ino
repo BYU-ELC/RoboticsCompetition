@@ -72,7 +72,7 @@ bool waitForRobot() {
   
   // state machine code
 
-  if (
+  if 
   
   
   bool triggeredDiode{false};
