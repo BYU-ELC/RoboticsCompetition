@@ -25,7 +25,7 @@ void setup() {
 }
 
 void turnServo() {
-  myservo.write(180);
+  myservo.write(90);
   delay(180);
 }
 

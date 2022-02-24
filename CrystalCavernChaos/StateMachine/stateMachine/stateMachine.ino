@@ -1,3 +1,5 @@
+#include <ESP32Servo.h>
+
 const int numServos{7};
 const int servoList[numServos]{12, 14, 25, 26, 27, 32, 33};
 const int paddleList[numServos]{2, 4, 5, 15, 16, 17, 18};
@@ -7,18 +9,49 @@ const int irLed{13};
 const int photoDiodeLed{5};
 const int startStop{21};
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("In setup: Connecting Servos");
+Servo myservo;
 
+void setup() {
+  
+  // serial communication initialization
+  Serial.begin(9600);
+
+  // initialize paddles
   for (int i = 0; i < numServos; ++i) {
     pinMode(paddleList[i], INPUT);
     //Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
   }
 
+  // initialize start/stop button
   pinMode(startStop, INPUT);
 
+  // esp motor pwm initialization
+  // Allow allocation of all timers
+  ESP32PWM::allocateTimer(0);
+  ESP32PWM::allocateTimer(1);
+  ESP32PWM::allocateTimer(2);
+  ESP32PWM::allocateTimer(3);
+  myservo.setPeriodHertz(50); // standard 50 hz servo
+
   Serial.println("-----------------Setup Complete-------------------");
+}
+
+void turnServo() {
+  myservo.write(80);
+  delay(300);
+}
+
+void resetServo() {
+  myservo.write(0);
+  delay(300);
+}
+
+void attachServo(int servoPin) {
+  myservo.attach(servoPin, 500, 2400);
+}
+
+void detachServo() {
+  myservo.detach();
 }
 
 bool checkPhotoDiode() {
@@ -53,6 +86,9 @@ void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const i
       Serial.print("\tButton ");
       Serial.print(i);
       Serial.println(" pressed");
+      attachServo(servoList[i]);
+      turnServo();
+      detachServo();
       beenPressed[i] = true;
       numPenalties++;
     }
@@ -117,14 +153,18 @@ void lost() {
 void prep() {
   // Debugging Code:
   Serial.println("prep");
+
+  // reset all servos so rubble can be reloaded
+  for (int i = 0; i < numServos; ++i) {
+    beenPressed[i] = false;
+    attachServo(servoList[i]);
+    resetServo();
+    detachServo();
+  }
   
   // state machine code
   while (!checkStart()) {delay(100);}
   delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
-
-  for (int i = 0; i < numServos; ++i) {
-    beenPressed[i] = false;
-  }
 }
 
 void loop() {
