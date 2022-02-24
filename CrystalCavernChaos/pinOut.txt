@@ -10,7 +10,7 @@ G32: Servo output
 G33: Servo output
 G35: Analog read for the photo diode.
 
-G0:  startStop input
+G21:  startStop input
 G2:  Button input
 G4:  Button input
 G5:  Button input
