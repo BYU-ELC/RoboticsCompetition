@@ -7,7 +7,7 @@ bool beenPressed[numServos]{false, false, false, false, false, false, false};
 
 const int irLed{13};
 const int photoDiodeLed{5};
-const int startStop{21};
+const int startStop{19};
 
 unsigned long startMillis = 0;
 unsigned long endMillis = 0;
