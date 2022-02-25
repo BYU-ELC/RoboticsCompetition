@@ -9,7 +9,8 @@ const int irLed{13};
 const int photoDiodeLed{5};
 const int startStop{21};
 
-unsigned long currentMillis = 0;
+unsigned long startMillis = 0;
+unsigned long endMillis = 0;
 
 Servo myservo;
 
@@ -104,7 +105,7 @@ bool checkStart() {
 void beginGame() {
   // Debugging Code:
   Serial.println("beginGame");
-  currentMillis = millis();
+  startMillis = millis();
 }
 
 bool waitForRobot() {
@@ -127,10 +128,14 @@ bool waitForRobot() {
     checkPaddles(numPenalties, paddleList, servoList);
     maxPenalties = checkPenalties(numPenalties);
     
-    if (triggeredDiode)
+    if (triggeredDiode) {
+      endMillis = millis();
       return true; // signifies that we should do the reset, so that's why we store waitForRobot() return value in variable doReset in main loop
-    else if (maxPenalties)
+    }
+    else if (maxPenalties) {
+      endMillis = millis();
       return false;
+    }
   }
 }
 
