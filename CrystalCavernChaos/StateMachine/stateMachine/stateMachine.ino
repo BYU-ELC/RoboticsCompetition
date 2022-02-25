@@ -9,6 +9,8 @@ const int irLed{13};
 const int photoDiodeLed{5};
 const int startStop{21};
 
+unsigned long currentMillis = 0;
+
 Servo myservo;
 
 void setup() {
@@ -102,6 +104,7 @@ bool checkStart() {
 void beginGame() {
   // Debugging Code:
   Serial.println("beginGame");
+  currentMillis = millis();
 }
 
 bool waitForRobot() {
