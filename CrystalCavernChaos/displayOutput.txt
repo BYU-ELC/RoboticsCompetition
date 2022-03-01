@@ -1,0 +1,36 @@
+16 characters per row, 2 rows
+
+// beginGame()
+
+----------------
+Starting
+Momentarily!
+----------------
+
+// waitForRobot()
+
+----------------
+Time: __
+Penalties: __
+----------------
+
+// won()
+
+----------------
+Time: __
+Score: __
+----------------
+
+// lost()
+
+----------------
+Disqualified
+by 3 penalties
+----------------
+
+// prep()
+
+----------------
+Replace
+Rubble!
+----------------

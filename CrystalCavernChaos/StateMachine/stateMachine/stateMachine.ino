@@ -1,4 +1,5 @@
 #include <ESP32Servo.h>
+#include <LiquidCrystal_I2C.h>
 
 const int numServos{7};
 const int servoList[numServos]{12, 14, 25, 26, 27, 32, 33};
@@ -11,6 +12,14 @@ const int startStop{19};
 
 unsigned long startMillis = 0;
 unsigned long endMillis = 0;
+
+const int lcdColumns = 16;
+const int lcdRows = 2;
+// SDA pin will be default: 22
+// SDC pin will be default: 21
+
+// Instance must be created... common port connection seems to be 0x27
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
 
 Servo myservo;
 
@@ -35,6 +44,10 @@ void setup() {
   ESP32PWM::allocateTimer(2);
   ESP32PWM::allocateTimer(3);
   myservo.setPeriodHertz(50); // standard 50 hz servo
+
+  // initialize LCD and backlight
+  lcd.init();
+  lcd.backlight();
 
   Serial.println("-----------------Setup Complete-------------------");
 }

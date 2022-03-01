@@ -1,6 +1,3 @@
-// if you have jibberish getting printed: https://rntlab.com/question/lcd_i2c-esp32-random-jibberish/
-
-#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
 int lcdColumns = 16;
