@@ -11,14 +11,14 @@ Momentarily!
 
 ----------------
 Time: __
-Penalties: __
+Penalties: __num
 ----------------
 
 // won()
 
 ----------------
-Time: __
-Score: __
+Win Time: ______
+Score:    ______
 ----------------
 
 // lost()

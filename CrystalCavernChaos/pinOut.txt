@@ -19,4 +19,5 @@ G16: Button input
 G17: Button input
 G18: Button input
 
-
+G22: SDC
+G21: SLC

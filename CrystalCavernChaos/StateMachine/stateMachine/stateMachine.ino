@@ -52,6 +52,43 @@ void setup() {
   Serial.println("-----------------Setup Complete-------------------");
 }
 
+void printToRow(int pos, const String& text) {
+  static String previousText = "foo";
+
+  if (previousText == text) {
+    // They're trying to reprint what's already been printed so don't do anyting!!!
+    //Serial.print("already printed: ");
+    //Serial.println(text);
+    return;
+  }
+  
+  if (text.length() < 0 || text.length() > 16) {
+    //Serial.println("Text TOO Large!!!");
+    previousText = text;
+    return;
+  }
+  else {
+    //Serial.print("Valid print: ");
+    //Serial.println(text);
+    lcd.setCursor(0,pos);
+    lcd.print("                ");
+    lcd.setCursor(0,pos);
+    lcd.print(text);
+  }
+
+  previousText = text;
+}
+
+void printScreen(const String& top, const String& bottom) {
+  if (top == "") {}
+  else
+    printToRow(0, top);
+
+  if (bottom == "") {}
+  else
+    printToRow(1, bottom);
+}
+
 void turnServo() {
   myservo.write(80);
   delay(300);
@@ -68,6 +105,10 @@ void attachServo(int servoPin) {
 
 void detachServo() {
   myservo.detach();
+}
+
+int getTime() {
+  int time
 }
 
 bool checkPhotoDiode() {
@@ -118,6 +159,7 @@ bool checkStart() {
 void beginGame() {
   // Debugging Code:
   Serial.println("beginGame");
+  printScreen("Starting", "Momentarily!");
   startMillis = millis();
 }
 
@@ -131,7 +173,7 @@ bool waitForRobot() {
   bool maxPenalties{false};
   
   while (true) {
-
+    printScreen("Time: " + getTime(), "Penalties: " + numPenalties);
 
     if (checkStart() != 0) {
       return false;
@@ -155,6 +197,7 @@ bool waitForRobot() {
 void won() {
   // Debugging Code:
   Serial.println("won");
+  printScreen("Win Time: " + getTime(6), "Score:    " + getScore(6));
 
   // state machine code
   while (!checkStart()) {delay(100);}
@@ -164,6 +207,7 @@ void won() {
 void lost() {
   // Debugging Code:
   Serial.println("lost");
+  printScreen("Disqualified by", "3 penalties");
 
   // state machine code
   while (!checkStart()) {delay(100);}
@@ -182,6 +226,8 @@ void prep() {
     resetServo();
     detachServo();
   }
+
+  printScreen("Replace", "Rubble!");
   
   // state machine code
   while (!checkStart()) {delay(100);}
