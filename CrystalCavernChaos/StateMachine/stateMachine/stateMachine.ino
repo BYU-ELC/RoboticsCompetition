@@ -1,10 +1,12 @@
 #include <ESP32Servo.h>
 #include <LiquidCrystal_I2C.h>
+#define TRIGGER_DEDUCTION 100000
 
 const int numServos{7};
 const int servoList[numServos]{12, 14, 25, 26, 27, 32, 33};
 const int paddleList[numServos]{2, 4, 5, 15, 16, 17, 18};
 bool beenPressed[numServos]{false, false, false, false, false, false, false};
+int numPenalties{0};
 
 const int irLed{13};
 const int photoDiodeLed{5};
@@ -57,23 +59,32 @@ void printToRow(int pos, const String& text) {
 
   if (previousText == text) {
     // They're trying to reprint what's already been printed so don't do anyting!!!
-    //Serial.print("already printed: ");
-    //Serial.println(text);
+    Serial.print("already printed: ");
+    Serial.println(text);
     return;
   }
-  
+
   if (text.length() < 0 || text.length() > 16) {
-    //Serial.println("Text TOO Large!!!");
+    Serial.println("Text TOO Large!!!");
     previousText = text;
     return;
-  }
-  else {
-    //Serial.print("Valid print: ");
-    //Serial.println(text);
+  } else {
+    Serial.print("Valid print: ");
+    Serial.println(text);
     lcd.setCursor(0,pos);
-    lcd.print("                ");
-    lcd.setCursor(0,pos);
-    lcd.print(text);
+    for (int i = 0; i < text.length(); ++i) {
+      if (previousText[i] == text[i]) {
+        // They're trying to reprint what's already been printed so don't do anyting!!!
+        continue;
+      } else {
+        lcd.setCursor(i,pos);
+        lcd.print(text[i]);
+      }
+    }
+    for (int i = text.length(); i < 16; ++i) {
+      lcd.setCursor(i, pos);
+      lcd.print(' ');
+    }
   }
 
   previousText = text;
@@ -108,7 +119,26 @@ void detachServo() {
 }
 
 int getTime() {
-  int time
+  unsigned long currTime = millis() - startMillis;
+  if (currTime > 999999) {
+    return 999999;
+  } else {
+    return currTime;
+  }
+}
+
+int getTotalTime() {
+  unsigned long totalTime = endMillis - startMillis;
+  if (totalTime > 999999) {
+    return 999999;
+  } else {
+    return totalTime;
+  }
+}
+
+int getScore() {
+  unsigned long totalTime = getTotalTime();
+  return totalTime - TRIGGER_DEDUCTION * numPenalties;
 }
 
 bool checkPhotoDiode() {
@@ -169,11 +199,10 @@ bool waitForRobot() {
   
   // state machine code
   bool triggeredDiode{false};
-  int numPenalties{0};
   bool maxPenalties{false};
   
   while (true) {
-    printScreen("Time: " + getTime(), "Penalties: " + numPenalties);
+    printScreen("Time: " + String(getTime()), "Penalties: " + String(numPenalties));
 
     if (checkStart() != 0) {
       return false;
@@ -197,7 +226,7 @@ bool waitForRobot() {
 void won() {
   // Debugging Code:
   Serial.println("won");
-  printScreen("Win Time: " + getTime(6), "Score:    " + getScore(6));
+  printScreen("Win Time: " + getTotalTime(), "Score:    " + getScore());
 
   // state machine code
   while (!checkStart()) {delay(100);}
@@ -218,6 +247,8 @@ void lost() {
 void prep() {
   // Debugging Code:
   Serial.println("prep");
+
+  numPenalties = 0;
 
   // reset all servos so rubble can be reloaded
   for (int i = 0; i < numServos; ++i) {
@@ -242,7 +273,7 @@ void loop() {
   bool doReset{waitForRobot()};
   //delay(500);
   if (doReset) {
-    won();
+    won();  
     //delay(500);
   } else {
     lost();

@@ -10,7 +10,7 @@ Momentarily!
 // waitForRobot()
 
 ----------------
-Time: __
+Time: ______
 Penalties: __num
 ----------------
 
@@ -24,8 +24,8 @@ Score:    ______
 // lost()
 
 ----------------
-Disqualified
-by 3 penalties
+Disqualified by
+3 penalties
 ----------------
 
 // prep()
