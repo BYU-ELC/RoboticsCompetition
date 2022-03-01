@@ -15,36 +15,9 @@ void setup(){
 }
 
 void printToRow(int pos, const String& text) {
-  static String previousText = "foo";
+  static String previousText[2]{"foo", "bar"};
 
-  if (previousText == text) {
-    // They're trying to reprint what's already been printed so don't do anyting!!!
-    Serial.print("already printed: ");
-    Serial.println(text);
-    return;
-  }
-  
-  if (text.length() < 0 || text.length() > 16) {
-    Serial.println("Text TOO Large!!!");
-    previousText = text;
-    return;
-  }
-  else {
-    Serial.print("Valid print: ");
-    Serial.println(text);
-    lcd.setCursor(0,pos);
-    lcd.print("                ");
-    lcd.setCursor(0,pos);
-    lcd.print(text);
-  }
-
-  previousText = text;
-}
-
-void astheticPrintToRow(int pos, const String& text) {
-  static String previousText = "foo";
-
-  if (previousText == text) {
+  if (previousText[pos] == text) {
     // They're trying to reprint what's already been printed so don't do anyting!!!
     Serial.print("already printed: ");
     Serial.println(text);
@@ -52,16 +25,18 @@ void astheticPrintToRow(int pos, const String& text) {
   }
 
   if (text.length() < 0 || text.length() > 16) {
-    Serial.println("Text TOO Large!!!");
-    previousText = text;
+    //Serial.println("Text TOO Large!!!");
+    previousText[pos] = text;
     return;
   } else {
-    Serial.print("Valid print: ");
-    Serial.println(text);
+    //Serial.print("Valid print: ");
+    //Serial.println(text);
     lcd.setCursor(0,pos);
+    Serial.println(previousText[pos]);
     for (int i = 0; i < text.length(); ++i) {
-      if (previousText[i] == text[i]) {
+      if (previousText[pos][i] == text[i]) {
         // They're trying to reprint what's already been printed so don't do anyting!!!
+        //Serial.println(String(previousText[pos][i])+String(text[i]));
         continue;
       } else {
         lcd.setCursor(i,pos);
@@ -74,7 +49,7 @@ void astheticPrintToRow(int pos, const String& text) {
     }
   }
 
-  previousText = text;
+  previousText[pos] = text;
 }
 
 void printScreen(const String& top, const String& bottom) {
@@ -105,9 +80,11 @@ void loop(){
   delay(1000);
   */
 
+  /*
   for (long i = 0; i < 30000; ++i) {
     printScreen(String(i) + "  " + String(i+1), "");
     //delay(200);
   }
+  */
   
 }
