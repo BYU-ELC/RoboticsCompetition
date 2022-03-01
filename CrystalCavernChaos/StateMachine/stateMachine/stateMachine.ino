@@ -72,9 +72,11 @@ void printToRow(int pos, const String& text) {
     Serial.print("Valid print: ");
     Serial.println(text);
     lcd.setCursor(0,pos);
+    Serial.println(previousText);
     for (int i = 0; i < text.length(); ++i) {
       if (previousText[i] == text[i]) {
         // They're trying to reprint what's already been printed so don't do anyting!!!
+        Serial.println(String(previousText[i])+String(text[i]));
         continue;
       } else {
         lcd.setCursor(i,pos);
