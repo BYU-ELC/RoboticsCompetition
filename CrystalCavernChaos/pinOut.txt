@@ -39,17 +39,17 @@ G13: Servo 4
 SD2: Switch 4
 SD3: LED 4
 
-G18: Servo 5
+G18: LED 5
 G5: Switch 5
-G17: LED 5
+G17: Servo 5
 
-G16: Servo 6
+G16: LED 6
 G4: Switch 6
-G0: LED 6
+G0: Servo 6
 
-G2: Servo 7
-G15: Switch7
-SD1: LED7
+G2: LED 7
+G15: Switch 7
+SD1: Servo 7
 
 
 
