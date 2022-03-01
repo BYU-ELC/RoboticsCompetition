@@ -21,3 +21,38 @@ G18: Button input
 
 G22: SDC
 G21: SLC
+
+//actual pinout----------------------------------------------------------on eagle PCB
+G34: Servo 1
+G35: Switch 1
+G32: LED 1
+
+G33: Servo 2
+G25: Switch 2
+G26: LED 2
+
+G27: Servo 3
+G14: Switch 3
+G12: LED3
+
+G13: Servo 4
+SD2: Switch 4
+SD3: LED 4
+
+G18: Servo 5
+G5: Switch 5
+G17: LED 5
+
+G16: Servo 6
+G4: Switch 6
+G0: LED 6
+
+G2: Servo 7
+G15: Switch7
+SD1: LED7
+
+
+
+
+
+
