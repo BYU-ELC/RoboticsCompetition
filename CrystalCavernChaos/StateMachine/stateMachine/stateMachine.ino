@@ -9,7 +9,7 @@ bool beenPressed[numServos]{false, false, false, false, false, false, false};
 int numPenalties{0};
 
 const int irLed{13};
-const int photoDiodeLed{5};
+const int photoDiodeLed{35};
 const int startStop{19};
 
 unsigned long startMillis = 0;
@@ -33,11 +33,14 @@ void setup() {
   // initialize paddles
   for (int i = 0; i < numServos; ++i) {
     pinMode(paddleList[i], INPUT);
-    //Serial.print("Servo "); Serial.print(i); Serial.print(" is "); Serial.println(digitalRead(paddleList[i]));
   }
 
   // initialize start/stop button
   pinMode(startStop, INPUT);
+
+  // initialize IR LED and Receiver
+  pinMode(irLed, OUTPUT);
+  digitalWrite(irLed, HIGH);
 
   // esp motor pwm initialization
   // Allow allocation of all timers
@@ -59,24 +62,21 @@ void printToRow(int pos, const String& text) {
 
   if (previousText[pos] == text) {
     // They're trying to reprint what's already been printed so don't do anyting!!!
-    Serial.print("already printed: ");
-    Serial.println(text);
     return;
   }
 
   if (text.length() < 0 || text.length() > 16) {
-    //Serial.println("Text TOO Large!!!");
+    Serial.println("-----------------------------------Text TOO Large!!!--------------------------------------");
     previousText[pos] = text;
     return;
   } else {
     //Serial.print("Valid print: ");
     //Serial.println(text);
     lcd.setCursor(0,pos);
-    Serial.println(previousText[pos]);
+    //Serial.println(previousText[pos]);
     for (int i = 0; i < text.length(); ++i) {
       if (previousText[pos][i] == text[i]) {
         // They're trying to reprint what's already been printed so don't do anyting!!!
-        //Serial.println(String(previousText[pos][i])+String(text[i]));
         continue;
       } else {
         lcd.setCursor(i,pos);
@@ -94,12 +94,14 @@ void printToRow(int pos, const String& text) {
 
 void printScreen(const String& top, const String& bottom) {
   if (top == "") {}
-  else
+  else {
     printToRow(0, top);
-
+  }
+    
   if (bottom == "") {}
-  else
+  else {
     printToRow(1, bottom);
+  } 
 }
 
 void turnServo() {
@@ -120,7 +122,7 @@ void detachServo() {
   myservo.detach();
 }
 
-int getTime() {
+unsigned long getTime() {
   unsigned long currTime = millis() - startMillis;
   if (currTime > 999999) {
     return 999999;
@@ -129,7 +131,7 @@ int getTime() {
   }
 }
 
-int getTotalTime() {
+unsigned long getTotalTime() {
   unsigned long totalTime = endMillis - startMillis;
   if (totalTime > 999999) {
     return 999999;
@@ -144,18 +146,10 @@ int getScore() {
 }
 
 bool checkPhotoDiode() {
-  // Debugging Code:
-  //Serial.print("  --");
-  //Serial.println("checkPhotoDiode()");
-  // state machine code:
   return false;
 }
 
 bool checkPenalties(int& numPenalties) {
-  // Debugging Code:
-  //Serial.print("  --");
-  //Serial.println("checkPenalties()");
-  // state machine code:
   if (numPenalties > 2) {
     return true;
   } else {
@@ -164,10 +158,6 @@ bool checkPenalties(int& numPenalties) {
 }
 
 void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const int (&servolist)[numServos]) {
-  // Debugging Code:
-  //Serial.print("  --");
-  //Serial.println("checkPaddles()");
-  
   // state machine code
   for (int i = 0; i < numServos; i++) {
     if (digitalRead(paddleList[i]) == HIGH && beenPressed[i] == false) {
@@ -192,6 +182,7 @@ void beginGame() {
   // Debugging Code:
   Serial.println("beginGame");
   printScreen("Starting", "Momentarily!");
+  delay(1000);
   startMillis = millis();
 }
 
@@ -207,7 +198,16 @@ bool waitForRobot() {
     printScreen("Time: " + String(getTime()), "Penalties: " + String(numPenalties));
 
     if (checkStart() != 0) {
-      return false;
+      endMillis = millis();
+      printScreen("Game", "Ended");
+      return true;
+    }
+
+    //
+    if (analogRead(photoDiodeLed) > 1000) {
+      endMillis = millis();
+      printScreen("Photodiode", "Tiggered");
+      return true;
     }
   
     triggeredDiode = checkPhotoDiode();
@@ -226,9 +226,12 @@ bool waitForRobot() {
 }
 
 void won() {
+
+  long totalTime = getTotalTime();
+  
   // Debugging Code:
-  Serial.println("won");
-  printScreen("Win Time: " + getTotalTime(), "Score:    " + getScore());
+  delay(1000);
+  printScreen("Time: " + String(totalTime), "Penalties: " + String(numPenalties)); //////// THISSSSSI SS PROMELLKMEATIC!!!! ////////////////
 
   // state machine code
   while (!checkStart()) {delay(100);}
@@ -265,10 +268,15 @@ void prep() {
   // state machine code
   while (!checkStart()) {delay(100);}
   delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
+
+  printScreen("Rubble", "Replaced?");
+  
+  // state machine code
+  while (!checkStart()) {delay(100);}
+  delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   // static int numPenalties{0}; <-- not sure why this line was necesary to begin with... ask Michael what the thought process was behind the static variable
   beginGame();
   //delay(500);
