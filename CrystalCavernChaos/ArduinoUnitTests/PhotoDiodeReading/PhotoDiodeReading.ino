@@ -1,6 +1,6 @@
 
-const int irLed{13};
-const int photoDiodeLed{35};
+const int irLed{15};
+const int photoDiodeLed{34};
 
 
 void setup() {
