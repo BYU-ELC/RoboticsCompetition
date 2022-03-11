@@ -1,58 +1,32 @@
 The following pins are being used as listed.
 
-G13: ir LED pin.
-G12: Servo output
-G14: Servo output
-G25: Servo output
-G26: Servo output
-G27: Servo output
-G32: Servo output
-G33: Servo output
-G35: Analog read for the photo diode.
+Reset Button:
+G2
 
-G19:  startStop input <-- because we will reserve 21 and 22 for i2c
-G2:  Button input
-G4:  Button input
-G5:  Button input
-G15: Button input
-G16: Button input
-G17: Button input
-G18: Button input
+Servo Data Lines:
+G4
+G12
+G17
+G18
+G25
+G27
+G33
 
-G22: SDC
-G21: SLC
+Switch Input Lines:
+G5
+G13
+G14
+G16
+G19
+G26
+G32
 
-//actual pinout----------------------------------------------------------on eagle PCB
-G34: Servo 1
-G35: Switch 1
-G32: LED 1
+IR Led:
+G15
 
-G33: Servo 2
-G25: Switch 2
-G26: LED 2
+PhotoDiode:
+G34
 
-G27: Servo 3
-G14: Switch 3
-G12: LED3
-
-G13: Servo 4
-SD2: Switch 4
-SD3: LED 4
-
-G18: LED 5
-G5: Switch 5
-G17: Servo 5
-
-G16: LED 6
-G4: Switch 6
-G0: Servo 6
-
-G2: LED 7
-G15: Switch 7
-SD1: Servo 7
-
-
-
-
-
-
+LCD Screen:
+SDA = G21
+SCL = G23
