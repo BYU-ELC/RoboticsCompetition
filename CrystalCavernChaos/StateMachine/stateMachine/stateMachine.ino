@@ -29,7 +29,7 @@ void setup() {
   
   // serial communication initialization
   Serial.begin(9600);
-
+  
   // initialize paddles
   for (int i = 0; i < numServos; ++i) {
     pinMode(paddleList[i], INPUT);
@@ -105,12 +105,12 @@ void printScreen(const String& top, const String& bottom) {
 }
 
 void turnServo() {
-  myservo.write(80);
-  delay(300);
+  myservo.write(0);
+  delay(180);
 }
 
 void resetServo() {
-  myservo.write(0);
+  myservo.write(140);
   delay(300);
 }
 
@@ -146,7 +146,9 @@ int getScore() {
 }
 
 bool checkPhotoDiode() {
-  return analogRead(photoDiodeLed) > 3000;
+  //Serial.print("Checking Photodiode: ");
+  //Serial.println(analogRead(photoDiodeLed));
+  return analogRead(photoDiodeLed) > 2000;
 }
 
 bool checkPenalties(int& numPenalties) {
@@ -163,7 +165,7 @@ void checkPaddles(int& numPenalties, const int (&paddleList)[numServos], const i
     if (digitalRead(paddleList[i]) == HIGH && beenPressed[i] == false) {
       digitalWrite(servoList[i], HIGH);
       Serial.print("\tButton ");
-      Serial.print(i);
+      Serial.print(i+1);
       Serial.println(" pressed");
       attachServo(servoList[i]);
       turnServo();
@@ -207,6 +209,7 @@ bool waitForRobot() {
     //
     if (checkPhotoDiode()) {
       endMillis = millis();
+      Serial.println("\tPhotodiode Triggered!");
       printScreen("Photodiode", "Tiggered");
       return true;
     }
@@ -215,11 +218,13 @@ bool waitForRobot() {
     checkPaddles(numPenalties, paddleList, servoList);
     maxPenalties = checkPenalties(numPenalties);
     
-    if (triggeredDiode) {
-      endMillis = millis();
-      return true; // signifies that we should do the reset, so that's why we store waitForRobot() return value in variable doReset in main loop
-    }
-    else if (maxPenalties) {
+    //if (triggeredDiode) {
+    //  endMillis = millis();
+    //  return true; // signifies that we should do the reset, so that's why we store waitForRobot() return value in variable doReset in main loop
+    //}
+    /*else*/ 
+    
+    if (maxPenalties) {
       endMillis = millis();
       return false;
     }
@@ -227,6 +232,9 @@ bool waitForRobot() {
 }
 
 void won() {
+
+  // Debugging Code:
+  Serial.println("won");
 
   long totalTime = getTotalTime();
   

@@ -5,8 +5,10 @@ Servo myservo;  // create servo object to control a servo
  
 int pos = 0; // default position    
                 
-int servoPin = 12;  // variable to store the servo position
+int servoPin = 33;  // variable to store the servo position
                     // recommended PWM GPIO pins on the ESP32 include 2,4,12-19,21-23,25-27,32-33 
+
+
 
 String input = "";
  
@@ -25,13 +27,13 @@ void setup() {
 }
 
 void turnServo() {
-  myservo.write(90);
+  myservo.write(0);
   delay(180);
 }
 
 void resetServo() {
-  myservo.write(0);
-  delay(180);
+  myservo.write(125);
+  delay(300);
 }
 
 void attachServo() {

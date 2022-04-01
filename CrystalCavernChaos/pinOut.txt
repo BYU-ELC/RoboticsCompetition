@@ -4,22 +4,22 @@ Reset Button:
 G2
 
 Servo Data Lines:
-G4
-G12
-G17
-G18
-G25
-G27
-G33
+Servo 7: G4
+Servo 4: G12
+Servo 6: G17
+Servo 5: G18
+Servo 2: G25
+Servo 3: G27
+Servo 1: G33
 
 Switch Input Lines:
-G5
-G13
-G14
-G16
-G19
-G26
-G32
+Switch 6: G5 <-- putting out 3.3v constantly...
+Switch 4: G13
+Switch 3: G14 <-- putting out 3.3v constantly...
+Switch 7: G16
+Switch 5: G19
+Switch 2: G26
+Switch 1: G32
 
 IR Led:
 G15
