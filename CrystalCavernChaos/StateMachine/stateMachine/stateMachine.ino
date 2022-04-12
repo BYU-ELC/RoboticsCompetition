@@ -106,12 +106,12 @@ void printScreen(const String& top, const String& bottom) {
 
 void turnServo() {
   myservo.write(0);
-  delay(180);
+  delay(300);
 }
 
 void resetServo() {
-  myservo.write(140);
-  delay(300);
+  myservo.write(180);
+  delay(600);
 }
 
 void attachServo(int servoPin) {
@@ -146,9 +146,9 @@ int getScore() {
 }
 
 bool checkPhotoDiode() {
-  //Serial.print("Checking Photodiode: ");
-  //Serial.println(analogRead(photoDiodeLed));
-  return analogRead(photoDiodeLed) > 2000;
+  Serial.print("Checking Photodiode: ");
+  Serial.println(analogRead(photoDiodeLed));
+  return analogRead(photoDiodeLed) > 150;
 }
 
 bool checkPenalties(int& numPenalties) {
@@ -206,7 +206,6 @@ bool waitForRobot() {
       return true;
     }
 
-    //
     if (checkPhotoDiode()) {
       endMillis = millis();
       Serial.println("\tPhotodiode Triggered!");
@@ -217,7 +216,8 @@ bool waitForRobot() {
     triggeredDiode = checkPhotoDiode();
     checkPaddles(numPenalties, paddleList, servoList);
     maxPenalties = checkPenalties(numPenalties);
-    
+
+    /*
     //if (triggeredDiode) {
     //  endMillis = millis();
     //  return true; // signifies that we should do the reset, so that's why we store waitForRobot() return value in variable doReset in main loop
