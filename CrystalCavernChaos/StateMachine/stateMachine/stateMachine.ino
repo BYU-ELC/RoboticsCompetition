@@ -146,8 +146,8 @@ int getScore() {
 }
 
 bool checkPhotoDiode() {
-  Serial.print("Checking Photodiode: ");
-  Serial.println(analogRead(photoDiodeLed));
+  //Serial.print("Checking Photodiode: ");
+  //Serial.println(analogRead(photoDiodeLed));
   return analogRead(photoDiodeLed) > 150;
 }
 
@@ -240,7 +240,7 @@ void won() {
   
   // Debugging Code:
   delay(1000);
-  printScreen("Time: " + String(totalTime), "Penalties: " + String(numPenalties)); //////// THISSSSS   ISSSSSSSSS   PROMELLKMEATIC!!!! ////////////////
+  printScreen("Time: " + String(totalTime), "Penalties: " + String(numPenalties));
 
   // state machine code
   while (!checkStart()) {delay(100);}
@@ -277,13 +277,13 @@ void prep() {
   printScreen("Replace", "Rubble!");
   
   // state machine code
-  while (!checkStart()) {delay(100);}
+  while (!checkStart()) {delay(200);}
   delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
 
   printScreen("Rubble", "Replaced?");
   
   // state machine code
-  while (!checkStart()) {delay(100);}
+  while (!checkStart()) {delay(200);}
   delay(500);// this will make sure a second button press by the user isn't accidentally recognised as a reset during the waitForRobot();
 }
 
